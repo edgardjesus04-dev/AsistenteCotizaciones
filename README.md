@@ -1,5 +1,7 @@
 # Asistente de Cotizaciones
 
+> **Demo en vivo:** https://asistente-cotizaciones.onrender.com
+
 Agente de IA para cotizaciones de mantenimiento del hogar construido con **Java 17 + Spring Boot 3 + Spring AI**. Responde cotizaciones usando *function calling* (busca precios reales con una herramienta), mantiene **memoria conversacional** por usuario y puede conectarse a **WhatsApp** mediante la API de 360dialog.
 
 ## Funcionalidades
@@ -82,13 +84,32 @@ http://localhost:8080
 ## WhatsApp (360dialog)
 
 1. Obtén una API key gratis del sandbox enviando `START` al número de 360dialog (https://wa.me/4930609859535?text=START).
-2. Expón tu servidor local con ngrok: `ngrok http 8080`.
-3. En app.360dialog.io, configura el webhook con tu URL pública + `/webhook`.
-4. Escribe al número sandbox desde tu teléfono y recibe las cotizaciones.
+2. Configura el webhook en app.360dialog.io con la URL del servicio desplegado + `/webhook`:
+   `https://asistente-cotizaciones.onrender.com/webhook`
+3. Escribe al número sandbox desde tu teléfono y recibe las cotizaciones.
 
 > El sandbox solo responde a tu propio número. Para producción se requiere verificación del negocio.
+> Si pruebas en local, usa un túnel: `ngrok http 8080` y configura tu URL de ngrok en lugar de la desplegada.
+
+## Despliegue
+
+El proyecto incluye un `render.yaml` (blueprint) y un `Dockerfile` para desplegar en [Render](https://render.com):
+
+1. Conecta el repositorio de GitHub y crea un **Blueprint** (usa `render.yaml`).
+2. Define las variables `OPENAI_API_KEY` y `WHATSAPP_API_KEY` en Render (no están en el repo).
+3. Cada `git push` a `main` re-despliega automáticamente.
+
+> El plan gratis de Render duerme el servicio tras ~15 min sin uso; la primera petición tarda ~30-60 s en despertar.
 
 ## Prueba rápida sin WhatsApp
+
+En la demo desplegada:
+
+```powershell
+Invoke-RestMethod "https://asistente-cotizaciones.onrender.com/chat?msg=%C2%BFcu%C3%A1nto%20cuesta%20cambiar%204%20grifos%3F"
+```
+
+En local:
 
 ```powershell
 Invoke-RestMethod "http://localhost:8080/chat?msg=%C2%BFcu%C3%A1nto%20cuesta%20cambiar%204%20grifos%3F"
