@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: asistente-cotizaciones
+    runtime: java
+    plan: free
+    region: oregon
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/quote-agent-0.0.1-SNAPSHOT.jar
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: WHATSAPP_API_KEY
+        sync: false
